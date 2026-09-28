@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>拆彈作業指南 - 模組 01：線路排除程序</title>
+  <title>機密解除手冊 - 模組 01：線路排除程序</title>
   <style>
     :root {
-      --bg-color: #f4efe6;
-      --card-bg: #ffffff;
+      --bg-color: #dcd6cd;
+      --paper-bg: #fcfbf9;
       --border-color: #2b2b2b;
-      --accent-red: #c0392b;
-      --accent-dark: #1a1a1a;
+      --accent-red: #b32d2e;
       --font-mono: "Courier New", Courier, monospace;
     }
 
@@ -22,61 +21,130 @@
 
     body {
       background-color: var(--bg-color);
-      color: var(--accent-dark);
+      color: #1a1a1a;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       padding: 30px 15px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
     }
 
-    .document {
+    /* 單頁紙張基礎樣式 */
+    .page {
       width: 100%;
       max-width: 820px;
-      background: var(--card-bg);
+      min-height: 1050px;
+      background: var(--paper-bg);
       border: 2px solid var(--border-color);
-      padding: 40px 48px;
-      box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+      padding: 60px 50px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
     /* 機密章戳 */
     .stamp {
       position: absolute;
-      top: 25px;
-      right: 40px;
-      border: 3px double var(--accent-red);
+      top: 45px;
+      right: 45px;
+      border: 4px double var(--accent-red);
       color: var(--accent-red);
       font-weight: 900;
-      font-size: 1.1rem;
-      padding: 6px 14px;
-      letter-spacing: 2px;
-      transform: rotate(5deg);
+      font-size: 1.3rem;
+      padding: 6px 16px;
+      letter-spacing: 3px;
+      transform: rotate(8deg);
       user-select: none;
+      font-family: var(--font-mono);
     }
 
-    .header {
+    /* ================= 封面頁專屬樣式 ================= */
+    .cover-page {
+      justify-content: space-between;
+      border: 6px double var(--border-color);
+    }
+
+    .cover-header {
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .cover-header .doc-id {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: #555;
+    }
+
+    .cover-body {
+      text-align: center;
+      margin: auto 0;
+      padding: 40px 0;
+    }
+
+    .cover-title {
+      font-size: 2.4rem;
+      letter-spacing: 4px;
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .cover-subtitle {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      color: #444;
+      margin-bottom: 35px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      border: 2px solid var(--border-color);
+      background: #eeebe3;
+      padding: 10px 24px;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+    }
+
+    .cover-footer {
+      border-top: 2px solid var(--border-color);
+      padding-top: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      display: flex;
+      justify-content: space-between;
+      color: #444;
+    }
+
+    /* ================= 內容頁樣式 ================= */
+    .manual-header {
       border-bottom: 3px solid var(--border-color);
-      padding-bottom: 15px;
+      padding-bottom: 12px;
       margin-bottom: 25px;
     }
 
-    .header h1 {
-      font-size: 1.6rem;
+    .manual-header h2 {
+      font-size: 1.5rem;
       letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
-    .header .meta {
+    .manual-header .meta {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: #666;
     }
 
-    /* 警告警語區塊 */
     .alert-box {
       border-left: 5px solid var(--accent-red);
-      background: #fdf2f2;
+      background: #fdf3f3;
       padding: 14px 18px;
       margin-bottom: 25px;
       font-size: 0.95rem;
@@ -87,7 +155,6 @@
       color: var(--accent-red);
     }
 
-    /* 規則表格 */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -113,31 +180,28 @@
     }
 
     tr:nth-child(even) {
-      background-color: #faf8f5;
+      background-color: #f7f5f0;
     }
 
     .cut-wire {
       font-family: var(--font-mono);
       font-weight: bold;
       color: var(--accent-red);
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       white-space: nowrap;
     }
 
-    /* 快速測試 / 互動模擬器 */
+    /* 線上快速工具 */
     .interactive-tool {
       background: #f0ede6;
       border: 1px dashed var(--border-color);
-      padding: 20px;
-      margin-top: 25px;
+      padding: 18px;
+      margin-top: auto;
     }
 
     .interactive-tool h3 {
-      font-size: 1rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
     }
 
     .input-group {
@@ -159,9 +223,8 @@
 
     .result {
       font-weight: bold;
-      font-size: 1rem;
-      color: #1a1a1a;
-      padding: 8px 14px;
+      font-size: 0.95rem;
+      padding: 8px 12px;
       background: #fff;
       border: 1px solid #ccc;
       min-height: 42px;
@@ -170,20 +233,25 @@
       flex-grow: 1;
     }
 
-    /* 列印專屬樣式 */
+    /* 列印專屬配置 */
     @media print {
       body {
         background: transparent;
         padding: 0;
+        gap: 0;
       }
-      .document {
+      .page {
         border: none;
         box-shadow: none;
-        padding: 0;
-        max-width: 100%;
+        padding: 40px;
+        min-height: 100vh;
+        page-break-after: always; /* 自動將封面與內容分為兩頁 */
+      }
+      .cover-page {
+        border: 4px double #000;
       }
       .interactive-tool {
-        display: none; /* 列印時隱藏互動計算器 */
+        display: none !important;
       }
       th {
         background: #000 !important;
@@ -196,19 +264,48 @@
 </head>
 <body>
 
-  <div class="document">
-    <div class="stamp">TOP SECRET / 機密</div>
+  <!-- ================= 封面頁 ================= -->
+  <div class="page cover-page">
+    <div class="stamp">TOP SECRET</div>
 
-    <div class="header">
-      <h1>模組 01：序列號線路排除程序</h1>
-      <div class="meta">DOC REF: EOD-MOD-01-WIRES // CLASSIFICATION: RESTRICTED</div>
+    <div class="cover-header">
+      <div class="doc-id">PROJECT: DEFUSE PROTOCOL // FILE NO. 883-X</div>
+      <div class="doc-id">AUTHORIZED PERSONNEL ONLY</div>
+    </div>
+
+    <div class="cover-body">
+      <h1 class="cover-title">應急拆彈排查手冊<br><span style="font-size: 1.6rem; font-weight: normal;">BOMB DEFUSAL MANUAL</span></h1>
+      <p class="cover-subtitle">標準處置作業程序 (SOP) - 現場特勤專用</p>
+      
+      <div class="cover-badge">
+        MODULE 01: SERIAL WIRES DISARMAMENT
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div>
+        發行代號：SEC-OP-2026<br>
+        適用單位：E.O.D. 拆彈應變小組
+      </div>
+      <div style="text-align: right;">
+        機密等級：極機密 (RESTRICTED)<br>
+        未經授權翻閱將受處分
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 內容頁 ================= -->
+  <div class="page">
+    <div class="manual-header">
+      <h2>模組 01：序列號線路排除程序</h2>
+      <div class="meta">DOC REF: EOD-MOD-01-WIRES // VERSION 2.4</div>
     </div>
 
     <div class="alert-box">
       <strong>【操作守則與違規處分】</strong><br>
       1. 讀取 LCD 顯示之 <strong>6 碼序號</strong>。<br>
-      2. 由上而下依序檢查下列規則，<strong>僅執行第一條完全符合的指令</strong>。<br>
-      3. 將該規則指定的電線<strong>全數剪斷／拔開</strong>即可成功排除。<br>
+      2. 由上而下依序檢查下列條件，<strong>僅執行第一條完全符合的指令</strong>。<br>
+      3. 將該規則指示的電線<strong>全數剪斷／拔開</strong>即可成功排除。<br>
       4. <strong>失誤處分</strong>：剪斷非指定線路即記 1 次失誤（亮紅燈、扣除 20 秒並加快倒數）；<strong>累積滿 3 次失誤立即引爆！</strong>
     </div>
 
@@ -249,7 +346,7 @@
       </tbody>
     </table>
 
-    <!-- 輔助專家快速查核工具 (列印時會自動隱藏) -->
+    <!-- 輔助專家快速查核工具 (列印時自動隱藏) -->
     <div class="interactive-tool">
       <h3>🔍 線上手冊快查工具（輸入 LCD 上的 6 碼測試）</h3>
       <div class="input-group">
@@ -307,7 +404,7 @@
         targetWires = "D3、D4";
       }
 
-      resultDiv.style.color = "#c0392b";
+      resultDiv.style.color = "#b32d2e";
       resultDiv.innerHTML = `符合 <strong>第 ${matchedRule} 條</strong> 規則 ➔ 剪斷 <strong style="font-size:1.15rem; font-family:monospace;">${targetWires}</strong>`;
     }
   </script>
